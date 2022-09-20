@@ -1,0 +1,20 @@
+{
+    "name":"Pallex Nexus CFML",
+    "version":"0.1.0",
+    "author":"Gary Stanton",
+    "location":"GaryStanton/pallex-nexus-cfml",
+    "repository":{
+        "type":"git",
+        "URL":"https://github.com/GaryStanton/pallex-nexus-cfml"
+    },
+    "bugs":"https://github.com/GaryStanton/pallex-nexus-cfml/issues",
+    "slug":"pallexnexuscfml",
+    "shortDescription":"This module provides a wrapper for the Pallex Nexus API",
+    "type":"modules",
+    "keywords":"Pallex Nexus Courier Southlink CFML ColdFusion Lucee",
+    "scripts":{
+        "postVersion":"package set location='GaryStanton/pallex-nexus-cfml#v`package version`'",
+        "onRelease":"publish",
+        "postPublish":"!git push --follow-tags"
+    }
+}
