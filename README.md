@@ -1,9 +1,9 @@
 # Pallex Nexus CFML
 
-Pallex Nexus CFML provides a wrapper for the Pallex Nexus API.
-At present, the module only includes a very limited subset of functionality to retrieve consignment data
-Further updates may include access to other Pallex Nexus API functionality.
-Pull requests welcome.
+Pallex Nexus CFML provides a wrapper for the Pallex Nexus API.  
+At present, the module only includes a very limited subset of functionality to retrieve consignment data.  
+Further updates may include access to other Pallex Nexus API functionality.  
+Pull requests welcome.  
 
 ## Installation
 ```js

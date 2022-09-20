@@ -189,43 +189,6 @@ component singleton accessors="true" {
 		}
 	}
 
-
-	/**
-	 * Accepts a struct of variables and a map of variable names to return a struct containing new variable names and values
-	 * @params - Struct of variables to convert
-	 * @variableMap - Map of old variables to new
-	 * @inclusive - When set to true, the returned struct will contain all variables that haven't been converted also. False and these variables are stripped.
-	 *
-	 * @return struct
-	 */
-	private function convertVariableNames(
-			required struct params
-		,	required struct variableMap
-		,	boolean inclusive = false
-	) {
-		Local.ConvertedVariables = {};
-		// Loop over struct and convert variable names
-		for (Local.ThisParam in Arguments.Params) {
-			// Check to see if this variable name is in the map
-			if(structKeyExists(Arguments.VariableMap, Local.ThisParam)) {
-				Local.ThisParamName = Arguments.VariableMap[Local.ThisParam];
-			}
-			else {
-				if (Arguments.Inclusive) {
-					Local.ThisParamName = Local.ThisParam;
-				}
-			}
-
-			// Add converted variable to the new struct
-			if (structKeyExists(Local, 'ThisParamName')) {
-				Local.ConvertedVariables[Local.ThisParamName] = Arguments.Params[Local.ThisParam];						
-			}
-		}
-
-		return Local.ConvertedVariables;
-	}
-
-
 	public function getMemento() {
 		return Variables;
 	}
