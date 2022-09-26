@@ -50,13 +50,20 @@ PallexNexusCFML = {
 }
 ```
 
-### Retrieve consignment data
+### List consignments
 ```cfc
 // Consignment module functionality may be accessed with `getConsignments()`
-consignments = PallexNexusCFML.getConsignments().retrive() (
+consignments = PallexNexusCFML.getConsignments().list() (
 		minCreatedDate = '2022-01-01'
 	,	limit = 20
 	,	offset = 0
+);
+```
+
+### Retrieve consignment data
+```cfc
+consignments = PallexNexusCFML.getConsignments().retrieve() (
+		consignmentID = 123456
 );
 ```
 

@@ -26,7 +26,7 @@ component singleton accessors="true" extends="pallexNexus" {
 
 
 	/**
-	 * Retrieve consignments
+	 * List consignments
 	 * @customerID The customer ID
 	 * @consignmentTypeID The consignment type ID
 	 * @statusID The status ID
@@ -49,7 +49,7 @@ component singleton accessors="true" extends="pallexNexus" {
 	 * @return string|object Response data.
 	 * @throws Exception
 	 */
-	public function retrieve(
+	public function list(
 			numeric customerID
 		,	numeric consignmentTypeID
 		,	array statusID
@@ -71,6 +71,27 @@ component singleton accessors="true" extends="pallexNexus" {
 	){
 		return makeRequest(
 			endpointString 	= 'consignments/'
+		,	method 			= 'GET'
+		,	params 			= Arguments
+		);
+	}
+
+
+	/**
+	 * Returns details of the specified consignment.
+	 * Only consignments associated with the current user (Originating Depot, Collecting Depot, Delivery Depot, or Originating Customer Account) will be returned
+	 *
+	 * @param      consignmentID  The consignment id
+	 * @param      include        The Web Method supports some optional parameters to increase the data provided for a consignment.
+	 *
+	 * @return     object
+	 */
+	public function retrieve(
+		required numeric consignmentID
+	,	string include
+	) {
+		return makeRequest(
+			endpointString 	= 'consignments/#Arguments.consignmentID#'
 		,	method 			= 'GET'
 		,	params 			= Arguments
 		);

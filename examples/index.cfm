@@ -20,7 +20,13 @@
 
 	if (StructKeyExists(Session, 'pallexNexus') && StructKeyExists(Form, 'action')) {
 		switch(Form.action) {
-			case 'retriveConsignments':
+			case 'listConsignments':
+				consignments = Session.pallexNexus.getConsignments();
+				writeDump(form);
+				writeDump(consignments.list(ArgumentCollection = form));
+			break;
+
+			case 'retrieveConsignment':
 				consignments = Session.pallexNexus.getConsignments();
 				writeDump(form);
 				writeDump(consignments.retrieve(ArgumentCollection = form));
@@ -48,35 +54,71 @@
 					<cfif structKeyExists(Session, 'pallexNexus')>
 						<div class="col-sm-7">
 							<div class="mr-7">
-								<h2>Retrieve Consignments</h2>
+								<h2>List Consignments</h2>
 								<p>Retrive a list of consignments matching the given criteria</p>
-								<form method="POST">
+
+								<cfset formName = 'frmListConsignments' />
+								<form method="POST" id="#formName#">
 									<div class="form-group row">
-										<label for="minCreatedDate" class="col-sm">minCreatedDate</label>
+										<label for="#formName#_minCreatedDate" class="col-sm">minCreatedDate</label>
 										<div class="col-sm">
-											<input type="text" class="form-control" id="minCreatedDate" name="minCreatedDate" aria-describedby="minCreatedDate" placeholder="yyyy-mm-dd">
+											<input type="text" class="form-control" id="#formName#_minCreatedDate" name="minCreatedDate" aria-describedby="minCreatedDate" placeholder="yyyy-mm-dd">
 										</div>
 									</div>
 
 									<div class="form-group row">
-										<label for="maxCreatedDate" class="col-sm">maxCreatedDate</label>
+										<label for="#formName#_maxCreatedDate" class="col-sm">maxCreatedDate</label>
 										<div class="col-sm">
-											<input type="text" class="form-control" id="maxCreatedDate" name="maxCreatedDate" aria-describedby="maxCreatedDate" placeholder="yyyy-mm-dd">
+											<input type="text" class="form-control" id="#formName#_maxCreatedDate" name="maxCreatedDate" aria-describedby="maxCreatedDate" placeholder="yyyy-mm-dd">
 										</div>
 									</div>
 
 									<div class="form-group row">
-										<label for="output" class="col-sm">Output</label>
-										<select class="form-control col-sm" id="return" name="output">
-											<option value="JSON">JSON</option>
-											<option value="RAW">RAW</option>
-											<option value="DEBUG">DEBUG</option>
-										</select>
+										<label for="#formName#_output" class="col-sm">Output</label>
+										<div class="col-sm">
+											<select class="form-control" id="#formName#_output" name="output">
+												<option value="JSON">JSON</option>
+												<option value="RAW">RAW</option>
+												<option value="DEBUG">DEBUG</option>
+											</select>
+										</div>
 									</div>
 
 
 									<div class="input-group">
-										<button type="submit" class="btn btn-primary" type="button" name="action" value="retriveConsignments">Query Pallex Nexus consignments API</button>
+										<button type="submit" class="btn btn-primary" type="button" name="action" value="listConsignments">List consignments</button>
+									</div>
+								</form>
+							</div>
+
+							<hr />
+
+							<div>
+								<h2>Retrieve Consignment data</h2>
+								<p>Retrive a single consignment by ID</p>
+
+								<cfset formName = 'frmRetrieveConsignment' />
+								<form method="POST">
+									<div class="form-group row">
+										<label for="#formName#_consignmentID" class="col-sm">consignmentID</label>
+										<div class="col-sm">
+											<input type="text" class="form-control" id="#formName#_consignmentID" name="consignmentID" aria-describedby="consignmentID" placeholder="0000000">
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<label for="#formName#_output" class="col-sm">Output</label>
+										<div class="col-sm">
+											<select class="form-control" id="#formName#_output" name="output">
+												<option value="JSON">JSON</option>
+												<option value="RAW">RAW</option>
+												<option value="DEBUG">DEBUG</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="input-group">
+										<button type="submit" class="btn btn-primary" type="button" name="action" value="retrieveConsignment">Retrieve consignment data</button>
 									</div>
 								</form>
 							</div>
