@@ -50,6 +50,8 @@ component singleton accessors="true" {
 	function setEnv(
 		required string env
 	) {
+		Variables.env = Arguments.env;
+
 		if (Arguments.env == 'LIVE') {
 			Variables.apiurl = 'https://rest-api-nexus.pallex.com/v1/'
 		}
@@ -128,14 +130,13 @@ component singleton accessors="true" {
 	 * Makes a request to the API. Will return the content from the cfhttp request.
 	 * @endpoint The request endpoint
 	 * @body The body of the request
-	 * @returnRaw When true return the response without parsing into structs and arrays
+	 * @output Output type: JSON|RAW|DEBUG (Parsed JSON | Raw filecontent | CFHTTP object)
 	 */
 	private function makeRequest(
 			required string endpointString
 		,	string method = 'GET'
-		,   boolean returnRaw = false
+		,   string output = 'JSON'
 	){
-
 		var requestURL  = getApiurl() & endpointString
 		var result      = {};
 
@@ -167,9 +168,13 @@ component singleton accessors="true" {
 			cfhttpparam(type="header", name="Content-Type", value="application/json");
 
 			// Add parameters
-			if (structKeyExists(Arguments, 'params') AND isStruct(Arguments.params)) {
+			if (structKeyExists(Arguments, 'params') && isStruct(Arguments.params)) {
 				for (Local.thisParam in Arguments.params) {
-					if (ListFindNoCase('xml,json', Local.thisParam) AND StructKeyExists(Arguments.params, Local.thisParam)) {
+					// If we have an 'output' param, that should be pushed to the arguments scope to override the default output
+					if (Local.thisParam == 'Output' && StructKeyExists(Arguments.params, Local.thisParam)) {
+						Arguments.Output = Arguments.params[Local.thisParam];
+					}
+					else if (ListFindNoCase('xml,json', Local.thisParam) && StructKeyExists(Arguments.params, Local.thisParam)) {
 						cfhttpparam(type="#paramType#", value="#Arguments.params[Local.thisParam]#");
 					}
 					else if (StructKeyExists(Arguments.params, Local.thisParam)) {
@@ -180,11 +185,21 @@ component singleton accessors="true" {
 		}
 
 		if (StructKeyExists(result, 'fileContent') && isJSON(result.fileContent)) {
-			return Arguments.returnRaw ? result.fileContent : deserializeJSON(result.fileContent);
+			switch (Arguments.output) {
+				case "DEBUG" :
+					result.environment = getEnv();
+					result.endpoint = requestURL;
+					return result;
+				break;
+				case "RAW" :
+					return result.fileContent;
+				break;
+				default:
+					return deserializeJSON(result.fileContent);
+				break;
+			}
 		}
 		else {
-			writeDump(result);
-			abort;
 			return {errors: 'Unable to parse result'};
 		}
 	}
