@@ -47,6 +47,11 @@ component singleton accessors="true" {
 		return this;
 	}
 
+	/**
+	 * Set the env variable. The API URL will automatically be set based on the environment variable (LIVE/TEST)
+	 * @env 	The env variable
+	 * @return  this
+	 */
 	function setEnv(
 		required string env
 	) {
@@ -62,6 +67,11 @@ component singleton accessors="true" {
 		return this;
 	}
 
+	/**
+	 * @brief      	Set a the bearer token variable in this and all child CFCs - and update the timestamp
+	 * @bearerToken The bearer token
+	 * @return     	this
+	 */
 	function setNewBearerToken(
 		required string bearerToken
 	) {
@@ -70,7 +80,7 @@ component singleton accessors="true" {
 
 		getConsignments()
 			.setBearerToken(Arguments.bearerToken)
-			.setTokenTimestamp(Now())
+			.setTokenTimestamp(Now());
 
 		return this;
 	}
@@ -82,7 +92,7 @@ component singleton accessors="true" {
 	 */
 	private function checkBearerToken() {
 		try {
-			return isDate(getTokenTimestamp()) && dateadd('n', -30, Now()) > getTokenTimestamp();
+			return isDate(getTokenTimestamp()) && dateadd('n', -30, Now()) < getTokenTimestamp();
 		}
 		catch(any e) {
 			return false;
@@ -90,6 +100,10 @@ component singleton accessors="true" {
 	}
 
 
+	/**
+	 * Post the username/password to the login endpoing to retrieve a new bearer token
+	 * @return this
+	 */
 	private function getNewBearerToken() {
 		cfhttp(
 			method  = "POST",
@@ -111,11 +125,14 @@ component singleton accessors="true" {
 			return setNewBearerToken(deserializeJSON(result.fileContent).bearerToken);
 		}
 		catch(any e) {
-			return {errors: 'Unable to parse result', detail: e.message};
+			return {errors: 'Unable to parse result', detail: e.message, result: result};
 		}
 	}
 
-
+	/**
+	 * Check that the bearer token is valid and if not, run the authentication logic to retrieve a new bearer token.
+	 * @return this
+	 */
 	private function authenticate() {
 		if (!checkBearerToken()) {
 			return getNewBearerToken();
@@ -200,7 +217,7 @@ component singleton accessors="true" {
 			}
 		}
 		else {
-			return {errors: 'Unable to parse result'};
+			return {errors: 'Unable to parse result', result: result, request: requestURL};
 		}
 	}
 
