@@ -5,7 +5,6 @@
  * Currently contains only a very limited subset of methods. Feel free to add!
  */
 component singleton accessors="true" extends="pallexNexus" {
-
 	/**
 	 * Constructor
 	 * @username The username to access the API
@@ -45,9 +44,6 @@ component singleton accessors="true" extends="pallexNexus" {
 	 * @searchTerm A term used to filter the records returned
 	 * @limit Maximum number of records to be returned
 	 * @offset Number of records to skip before returning data
-	 *
-	 * @return string|object Response data.
-	 * @throws Exception
 	 */
 	public function list(
 			numeric customerID
@@ -81,10 +77,8 @@ component singleton accessors="true" extends="pallexNexus" {
 	 * Returns details of the specified consignment.
 	 * Only consignments associated with the current user (Originating Depot, Collecting Depot, Delivery Depot, or Originating Customer Account) will be returned
 	 *
-	 * @param      consignmentID  The consignment id
-	 * @param      include        The Web Method supports some optional parameters to increase the data provided for a consignment.
-	 *
-	 * @return     object
+	 * @consignmentID 	The consignment id
+	 * @include        	The Web Method supports some optional parameters to increase the data provided for a consignment.
 	 */
 	public function retrieve(
 		required numeric consignmentID
@@ -92,6 +86,21 @@ component singleton accessors="true" extends="pallexNexus" {
 	) {
 		return makeRequest(
 			endpointString 	= 'consignments/#Arguments.consignmentID#'
+		,	method 			= 'GET'
+		,	params 			= Arguments
+		);
+	}
+
+
+	/**
+	 * Returns a list of attachments for the specified consignment. The URLs returned link directly to the attachments
+	 * @consignmentID 	The consignment id
+	 */
+	public function attachmentsRetrieve(
+		required numeric consignmentID
+	) {
+		return makeRequest(
+			endpointString 	= 'consignments/#Arguments.consignmentID#/attachments'
 		,	method 			= 'GET'
 		,	params 			= Arguments
 		);

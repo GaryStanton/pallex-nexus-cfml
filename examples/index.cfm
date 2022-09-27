@@ -31,6 +31,22 @@
 				writeDump(form);
 				writeDump(consignments.retrieve(ArgumentCollection = form));
 			break;
+
+			case 'retrieveConsignmentAttachments':
+				consignments = Session.pallexNexus.getConsignments();
+				writeDump(form);
+				writeDump(consignments.attachmentsRetrieve(ArgumentCollection = form));
+			break;
+
+			case 'lookupConsignmentStatuses':
+				lookups = Session.pallexNexus.getLookups();
+				writeDump(lookups.consignmentStatuses(ArgumentCollection = form));
+			break;
+
+			case 'lookupConsignmentAttachmentTypes':
+				lookups = Session.pallexNexus.getLookups();
+				writeDump(lookups.consignmentAttachmentTypes(ArgumentCollection = form));
+			break;
 		}
 	}
 </cfscript>
@@ -122,6 +138,89 @@
 									</div>
 								</form>
 							</div>
+
+							<hr />
+
+							<div>
+								<h2>Retrieve Consignment attachments</h2>
+								<p>Retrive the attachments of a single consignment by ID</p>
+
+								<cfset formName = 'frmRetrieveConsignmentAttachments' />
+								<form method="POST">
+									<div class="form-group row">
+										<label for="#formName#_consignmentID" class="col-sm">consignmentID</label>
+										<div class="col-sm">
+											<input type="text" class="form-control" id="#formName#_consignmentID" name="consignmentID" aria-describedby="consignmentID" placeholder="0000000">
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<label for="#formName#_output" class="col-sm">Output</label>
+										<div class="col-sm">
+											<select class="form-control" id="#formName#_output" name="output">
+												<option value="JSON">JSON</option>
+												<option value="RAW">RAW</option>
+												<option value="DEBUG">DEBUG</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="input-group">
+										<button type="submit" class="btn btn-primary" type="button" name="action" value="retrieveConsignmentAttachments">Retrieve consignment attachments</button>
+									</div>
+								</form>
+							</div>
+
+							<hr />
+
+							<div>
+								<h2>Lookup consignment statuses</h2>
+								<p>Retrive a list of possible consignment statuses</p>
+
+								<cfset formName = 'frmLookupConsignmentStatuses' />
+								<form method="POST">
+									<div class="form-group row">
+										<label for="#formName#_output" class="col-sm">Output</label>
+										<div class="col-sm">
+											<select class="form-control" id="#formName#_output" name="output">
+												<option value="JSON">JSON</option>
+												<option value="RAW">RAW</option>
+												<option value="DEBUG">DEBUG</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="input-group">
+										<button type="submit" class="btn btn-primary" type="button" name="action" value="lookupConsignmentStatuses">Lookup consigment statuses</button>
+									</div>
+								</form>
+							</div>
+
+							<hr />
+
+							<div>
+								<h2>Lookup attachment types</h2>
+								<p>Returns a paginated list of consignment attachment types.</p>
+
+								<cfset formName = 'frmLookupConsignmentAttachmentTypes' />
+								<form method="POST">
+									<div class="form-group row">
+										<label for="#formName#_output" class="col-sm">Output</label>
+										<div class="col-sm">
+											<select class="form-control" id="#formName#_output" name="output">
+												<option value="JSON">JSON</option>
+												<option value="RAW">RAW</option>
+												<option value="DEBUG">DEBUG</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="input-group">
+										<button type="submit" class="btn btn-primary" type="button" name="action" value="lookupConsignmentAttachmentTypes">Lookup attachment types</button>
+									</div>
+								</form>
+							</div>
+
 						</div>
 						<div class="col-sm-5">
 							<h3>API details</h3>
@@ -143,7 +242,8 @@
 									<td>#EncodeForHTML(session.pallexNexus.getTokenTimeStamp())#</td>
 								</tr>
 							</table>
-							<a href="?clear" class="btn btn-danger btn-sm">Clear</a>
+							<a href="?clear" class="btn btn-danger">Reset API</a>
+							<a href="?dump" class="btn btn-danger">View component</a>
 						</div>
 					<cfelse> 
 						<div class="col-sm-12">

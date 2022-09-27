@@ -17,7 +17,9 @@ component singleton accessors="true" {
 	property name="bearerToken" 	type="string";
 	property name="tokenTimestamp" 	type="string";
 
+	// Child CFCs representing Pallex Nexus APIs
 	property name="consignments" 	type="consignments";
+	property name="lookups" 		type="lookups";
 
 	/**
 	 * Constructor
@@ -34,8 +36,17 @@ component singleton accessors="true" {
 		setPassword(Arguments.password);
 		setEnv(Arguments.env);
 
+		// Consignments API
 		setConsignments(new consignments())
 		getConsignments()
+			.setUsername(getUsername())
+			.setPassword(getPassword())
+			.setEnv(getEnv())
+		;
+
+		// Lookups API
+		setLookups(new lookups())
+		getLookups()
 			.setUsername(getUsername())
 			.setPassword(getPassword())
 			.setEnv(getEnv())
